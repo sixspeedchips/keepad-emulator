@@ -1,0 +1,20 @@
+
+
+
+
+
+
+
+.keypadButton{
+  -fx-pref-height: 50;
+  -fx-pref-width: 50;
+
+  -fx-font: 30px "OCR A Extended";
+  -fx-cursor: hand;
+}
+
+.keypad{
+  -fx-hgap: 6;
+  -fx-vgap: 6;
+
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<?import io.libsoft.keypad.view.element.Keypad?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+  prefWidth="250"
+  stylesheets="styles.css"
+  fx:controller="io.libsoft.keypad.controller.DrawController">
+
+  <Keypad AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" AnchorPane.topAnchor="10"
+    fx:id="keyPad"/>
+
+</AnchorPane>
