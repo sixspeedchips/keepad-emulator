@@ -1,6 +1,6 @@
 package io.libsoft.keypad.view.element;
 
-import java.sql.Time;
+import io.libsoft.keypad.model.external.KeypadModel;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,7 +10,6 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import javafx.application.Platform;
 import javafx.scene.layout.GridPane;
 
@@ -21,6 +20,7 @@ public class Keypad extends GridPane implements ButtonClickListener {
   private final KeypadButton enter = new KeypadButton("#", this);
   private final KeypadButton aux = new KeypadButton("*", this);
   private final Map<String, Runnable> functions;
+  private KeypadModel keypadModel;
 
 
   public Keypad() {
@@ -33,10 +33,10 @@ public class Keypad extends GridPane implements ButtonClickListener {
 
     functions = new HashMap<>();
     AtomicBoolean shuffling = new AtomicBoolean(false);
-    functions.put("*", ()->{
-      if (!shuffling.get()){
+    functions.put("*", () -> {
+      if (!shuffling.get()) {
         shuffling.set(true);
-        new Thread(()->{
+        new Thread(() -> {
 
           for (int i = 0; i < 10; i++) {
             Platform.runLater(this::shuffleKeypad);
@@ -53,18 +53,16 @@ public class Keypad extends GridPane implements ButtonClickListener {
 
 
     });
-    functions.put("#", ()->{
+    functions.put("#", () -> {
 
     });
-
-
 
     createGrid();
 
   }
 
   public void shuffleKeypad() {
-    List<Integer> integers = IntStream.range(0,10).boxed().collect(Collectors.toList());
+    List<Integer> integers = IntStream.range(0, 10).boxed().collect(Collectors.toList());
     Collections.shuffle(integers);
     for (int i = 0; i < integers.size(); i++) {
       buttons.get(i).setButtonValue(integers.get(i).toString());
@@ -89,10 +87,12 @@ public class Keypad extends GridPane implements ButtonClickListener {
   @Override
   public void onClicked(String value) {
     if (!value.isEmpty()) {
-      System.out.println(value);
+      if (keypadModel != null){
+        keypadModel.sendMessage(value);
+      }
     }
 
-    if (functions.containsKey(value)){
+    if (functions.containsKey(value)) {
       functions.get(value).run();
     }
 
@@ -100,4 +100,7 @@ public class Keypad extends GridPane implements ButtonClickListener {
   }
 
 
+  public void bindModel(KeypadModel keypadModel) {
+    this.keypadModel = keypadModel;
+  }
 }

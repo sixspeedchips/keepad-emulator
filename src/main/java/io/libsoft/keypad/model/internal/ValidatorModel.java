@@ -1,5 +1,6 @@
 package io.libsoft.keypad.model.internal;
 
+import io.libsoft.keypad.model.network.ConnectionHandler;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -7,17 +8,20 @@ import java.net.Socket;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class ControllerModel implements Runnable {
+public class ValidatorModel implements Runnable {
 
 
-  private final ConnectionHandler connectionHandler= new ConnectionHandler();
-
-  private final ServerSocket serverSocket = new ServerSocket(10001, 2, InetAddress.getLoopbackAddress());
-  private final ScheduledExecutorService es = Executors.newScheduledThreadPool(1);
+  private final ConnectionHandler connectionHandler = new ConnectionHandler();
+  private ServerSocket serverSocket;
   private boolean running;
 
-  public ControllerModel() throws IOException {
+  public ValidatorModel() {
 
+    try {
+      serverSocket = new ServerSocket(8888, 10, InetAddress.getLoopbackAddress());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
 
@@ -30,6 +34,8 @@ public class ControllerModel implements Runnable {
         System.out.println(
             "Awaiting keypads on port: " + serverSocket.getLocalPort() + " Host: " + serverSocket.getInetAddress());
         Socket accepted = serverSocket.accept();
+        connectionHandler.addConnection(accepted);
+
         System.out.println("Accepted " + accepted);
       } catch (IOException ignored) {
       }
@@ -37,8 +43,7 @@ public class ControllerModel implements Runnable {
     }
   }
 
-  public void quit(){
-    es.shutdownNow();
+  public void quit() {
     running = false;
   }
 }

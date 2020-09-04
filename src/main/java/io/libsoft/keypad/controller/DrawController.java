@@ -1,6 +1,7 @@
 package io.libsoft.keypad.controller;
 
 
+import io.libsoft.keypad.model.external.KeypadModel;
 import io.libsoft.keypad.view.FontSelector;
 import io.libsoft.keypad.view.element.Keypad;
 import javafx.animation.AnimationTimer;
@@ -12,13 +13,12 @@ public class DrawController {
   private final GFXUpdater updater = new GFXUpdater();
   public Keypad keyPad;
   public FontSelector fontSelector;
+  private KeypadModel keypadModel;
 
   @FXML
   private void initialize() {
 
     updater.start();
-
-
 
 
   }
@@ -34,6 +34,11 @@ public class DrawController {
 
   private void updateView() {
 
+  }
+
+  public void setKeypadModel(KeypadModel keypadModel) {
+    this.keypadModel = keypadModel;
+    keyPad.bindModel(keypadModel);
   }
 
 
